@@ -1,0 +1,65 @@
+.footer-comp {
+  display: inline-block;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  margin-top: 1rem;
+  width: 100%;
+  height: 80px;
+  background-color: #e9ecef;
+  text-align: center;
+}
+
+.pages-links {
+  height: 80px;
+}
+
+.grid-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.grid-1 {
+  position: relative;
+}
+
+.fm-circle-out {
+  width: 140px;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  display: block;
+  opacity: 1;
+}
+
+.fm-circle-out:hover {
+  opacity: 1;
+  transition: all 0.2s linear;
+}
+
+.fm-circle-out:hover .fm-circle-in p {
+  width: 30px;
+  height: 30px;
+  font-size: 1.5rem;
+}
+
+.fm-circle-in {
+  width: 50px;
+  height: 60px;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 20%;
+}
+
+.fm-circle-out:hover {
+  opacity: 1;
+  transition: all 0.2s linear;
+}
+
+.svg-icon {
+  display: block;
+  width: 48px;
+}

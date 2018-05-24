@@ -1,0 +1,48 @@
+.radio-group {
+  display: inline-flex;
+  position: relative;
+  margin: 1rem;
+
+  .radio-title {
+    margin: 1.0em 0.5rem 1.0em 0;
+    line-height: 0.5rem;
+    font-weight: bold;
+  }
+}
+
+.list-group {
+  display: flex;
+  min-height: 100%;
+  padding: 0 1rem;
+  flex-direction: column;
+  position: relative;
+
+  & ul {
+    margin: 0 auto;
+
+    & li {
+      display: inline-flex;
+      margin: 0 auto;
+    }
+  }
+}
+
+.item-container {
+  display: inline-flex;
+  margin: 0 auto;
+  & a {
+    display: block;
+    padding: 12px 0;
+    margin: 0 9px;
+  }
+}
+
+.item {
+  display: inline-flex;
+  width: 100%;
+
+  input[type=checkbox] {
+    margin: 16px 8px;
+    height: 24px;
+  }
+}

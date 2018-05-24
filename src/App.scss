@@ -1,0 +1,9 @@
+.app-wrapper {
+  max-width: calc(1440px + 16px * 2);
+  margin: 0 auto;
+  display: flex;
+  min-width: 420px;
+  min-height: 100%;
+  padding: 0 16px;
+  flex-direction: column;
+}
