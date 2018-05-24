@@ -1,4 +1,8 @@
-# my-locations
+# my-locations-saga
+
+This is the version of "my-locations" project? but I've used the Redux-Saga middleware in order to separate 
+action creator from api calling. 
+
 Practical Exam - Welldone
 
 Notes: 
