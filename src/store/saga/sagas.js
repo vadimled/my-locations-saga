@@ -1,4 +1,4 @@
-import {all, call, put} from 'redux-saga/effects';
+import {call, put, race} from 'redux-saga/effects';
 import * as actions from "../actions";
 import * as actionTypes from "../../utils/constants";
 import {deleteEntryApi, editEntryApi, fetchDatabaseApi, getCoordinatesApi, setNewEntryApi} from "../../Api";
@@ -36,15 +36,15 @@ export function* deleteCategorySaga(action) {
     try {
         for (const i in action.payload) {
             if (action.payload.hasOwnProperty(i)) {
-                yield all([
-                    yield call(deleteEntryApi, action.payload[i]),
-                    yield put(actions.deleteDataFromStore(action.payload[i]))
-                ])
+                yield race({
+                    key1: call(deleteEntryApi, action.payload[i]),
+                    key2: put(actions.deleteDataFromStore(action.payload[i]))}
+                )
             }
         }
         yield put(actions.setToolBarActive);
     } catch (error) {
-        put({type: actionTypes.DB_DELETE_CATEGORY, payload: error.message});
+        put({type: actionTypes.DB_DELETE_CATEGORY_FAILED, payload: error.message});
     }
 }
 
@@ -58,7 +58,7 @@ export function* editEntrySaga(action) {
     }
 }
 
-export function* fetchCoordinates(action) {//model
+export function* fetchCoordinates(action) {
     try {
         const res = yield call(getCoordinatesApi, action.payload);
         if (res.data.results.length) {
