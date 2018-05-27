@@ -1,6 +1,7 @@
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
@@ -10,9 +11,8 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js',
         chunkFilename: '[id].js',
-        publicPath: ''
+        filename: '[name].bundle.js'
     },
     resolve: {
         extensions: ['.js', '.jsx']
@@ -85,7 +85,9 @@ module.exports = {
         ]
     },
     plugins: [
+        new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
+            title: 'Production',
             template: __dirname + '/src/index.html',
             filename: 'index.html',
             inject: 'body'

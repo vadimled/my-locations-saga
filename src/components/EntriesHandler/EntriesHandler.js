@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 import {Button, Col, Container, FormGroup, Input, InputGroup, InputGroupAddon, Label} from 'reactstrap';
 import {AvFeedback, AvField, AvForm, AvGroup, AvInput} from 'availity-reactstrap-validation';
 
@@ -9,7 +9,7 @@ import * as actions from "../../store/actions";
 import {connect} from "react-redux";
 import * as constStr from "../../utils/constants";
 
-class EntriesHandler extends PureComponent {
+class EntriesHandler extends Component {
 
     state = {
         ready: false,
