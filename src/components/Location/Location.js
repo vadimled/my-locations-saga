@@ -1,5 +1,5 @@
 import React from 'react';
-import * as style from './style.scss'
+import * as style from './style.scss';
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";

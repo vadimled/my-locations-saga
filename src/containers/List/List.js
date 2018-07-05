@@ -9,6 +9,7 @@ import * as css from './style.scss';
 import {Button, ButtonGroup, ListGroup} from "reactstrap";
 import {getCountriesList, getLocation, getArray} from "../../utils/dataBaseHandler";
 
+
 class List extends React.Component {
 
     componentWillMount() {
@@ -51,6 +52,7 @@ class List extends React.Component {
             }
         }
         else if (tbAction === constStr.EDIT_TOOLBAR) {
+            this.props.onPending(true);
             const item = getLocation(this.props.dBase, data.id);
             delete item.id;
             this.props.history.push({
@@ -125,7 +127,8 @@ const mapDispatchToProps = dispatch => {
         onToolbar: (data) => dispatch(actions.onToolbarHandler(data)),
         deleteCategory: (data) => dispatch(actions.deleteDBCategory(data)),
         deleteItem: (id) => dispatch(actions.deleteDBItem(id)),
-        setFilterState: (val) => dispatch(actions.setFilterState(val))
+        setFilterState: (val) => dispatch(actions.setFilterState(val)),
+        onPending: (val) => dispatch(actions.onPending(val))
     }
 };
 

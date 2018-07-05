@@ -26,15 +26,16 @@ class ToolBarContainer extends Component {
     }
 
     toolbarHandler = (e, id) => {
-        this.props.onToolbar({name: e.target.textContent});
+        this.props.onPending(true);
 
+        this.props.onToolbar({name: e.target.textContent});
         if (e.target.textContent  === constStr.REMOVE_TOOLBAR) {
             if (id) {
                 this.props.deleteItem(id);
                 return this.props.history.goBack();
             }
         }
-        if (e.target.textContent  === constStr.EDIT_TOOLBAR) {
+        else if (e.target.textContent  === constStr.EDIT_TOOLBAR) {
             if (id) {
                 const item = getLocation(this.props.dBase, id);
                 delete item.id;
@@ -43,6 +44,9 @@ class ToolBarContainer extends Component {
                     state: {editItem: item, editId: id}
                 });
             }
+        }
+        else{
+            this.props.onPending(false);
         }
     };
 
@@ -97,6 +101,7 @@ const mapDispatchToProps = dispatch => {
         addItem: (data) => dispatch(actions.addDBEntry(data)),
         deleteItem: (id) => dispatch(actions.deleteDBItem(id)),
         editExstItem: (data) => dispatch(actions.editDBItem(data)),
+        onPending: (val) => dispatch(actions.onPending(val))
     }
 };
 

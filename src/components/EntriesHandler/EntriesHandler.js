@@ -8,6 +8,7 @@ import {isEqual} from "lodash/lang";
 import * as actions from "../../store/actions";
 import {connect} from "react-redux";
 import * as constStr from "../../utils/constants";
+import Spinner from "../Spinner";
 
 class EntriesHandler extends Component {
 
@@ -18,41 +19,36 @@ class EntriesHandler extends Component {
 
     componentWillMount() {
         const {location, model} = this.props;
-        if (!this.props.tbAction) {
-            this.setState({ready: true});
-        }
-        else if (this.props.tbAction === constStr.EDIT_TOOLBAR) {
-            const editId = location.state && location.state.editItem;
+        this.props.onPending(true);
 
-            let promise = new Promise((res) => {
-                    if (!model && editId) {
-                        res(this.props.setEditModel(editId));
-                    }
-                }
-            );
-            promise.then(
-                () => this.setState({ready: true})
-            )
+        if (this.props.tbAction === constStr.EDIT_TOOLBAR) {
+            const editId = location.state && location.state.editItem;
+            this.props.setEditModel(editId);
         }
         else if (this.props.tbAction === constStr.ADD_TOOLBAR) {
-            this.setState({ready: true});
+            this.props.onPending(false);
         }
     }
 
     componentWillReceiveProps(newProps) {
-        let promise = new Promise((res) => {
-                if (newProps.model) {
-                    res(
-                        setTimeout(() => {
-                            console.log("Result:")
-                        }, 1000)
-                    );
-                }
-            }
-        );
-        promise.then(
-            () => this.setState({ready: true})
-        );
+        if (newProps.model) {
+            this.props.onPending(false);
+        }
+        /*
+                let promise = new Promise((res) => {
+                        if (newProps.model) {
+                            res(
+                                setTimeout(() => {
+                                    console.log("Result:")
+                                }, 1000)
+                            );
+                        }
+                    }
+                );
+                promise.then(
+                    () => this.setState({ready: true})
+                );
+        */
     }
 
     componentWillUnmount() {
@@ -76,6 +72,7 @@ class EntriesHandler extends Component {
 
     onSubmit = (event, val, errors) => {
         const {handleSubmit, location} = this.props;
+        this.props.onPending(true);
 
         const correctData = this.correctData(val);
         if (this.props.tbAction === constStr.EDIT_TOOLBAR) {
@@ -91,6 +88,9 @@ class EntriesHandler extends Component {
         else if (this.props.tbAction === constStr.ADD_TOOLBAR) {
             handleSubmit(event, correctData);
             this.props.model && this.props.cleanEditModel();
+        }
+        else {
+            this.props.onPending(false);
         }
     };
 
@@ -114,64 +114,67 @@ class EntriesHandler extends Component {
             city: this.setToUpperCase(city)
         };
         getCoordinates(model);
-        this.setState({ready: false});
+        // this.setState({ready: false});
     };
 
     render() {
         const {model} = this.props;
 
         return <Container>
-            {(this.state.ready) &&
-            <Col sm="12" md={{size: 8, offset: 2}}>
-                <AvForm onValidSubmit={this.onSubmit}
-                        ref={form => this.form = form}
-                        model={model}>
-                    <AvGroup>
-                        <Label for="country_name">Country</Label>
-                        <AvInput name="country_name" type='text' id="countryName" maxLength="45" required/>
-                        <AvFeedback>Must be 45 characters or less!</AvFeedback>
-                    </AvGroup>
-                    <AvGroup>
-                        <Label for="city">City</Label>
-                        <AvInput name="city" type='text' id="city" maxLength="85" onChange={this.onChange}
-                                 required/>
-                        <AvFeedback>Must be 45 characters or less !</AvFeedback>
-                    </AvGroup>
-                    <AvGroup>
-                        <Label for="ip">IP</Label>
-                        <AvInput name="ip" type='text' id="ip"
-                                 validate={{pattern: {value: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/}}}
-                                 required/>
-                        <AvFeedback>Invalid IP address.</AvFeedback>
-                    </AvGroup>
-                    <AvGroup>
-                        <Label for="coordinate">Try to get coordinates from Google Maps</Label>
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend"><Button
-                                onClick={() => this.onGet(this.state.city)}>Get</Button></InputGroupAddon>
-                            <Input name="coordinates" value={this.state.city}/>
-                        </InputGroup>
-                    </AvGroup>
-                    <AvGroup>
-                        <Label for="latitude">Latitude</Label>
-                        <AvField name="latitude" type='number' id="latitude"
-                                 validate={{pattern: {value: /\S*(-?\d+(\.\d+)?)/}}} required/>
-                        <AvFeedback>Invalid Latitude value.</AvFeedback>
-                    </AvGroup>
-                    <AvGroup>
-                        <Label for="longitude">Longitude</Label>
-                        <AvField name="longitude" type='number' id="longitude"
-                                 validate={{pattern: {value: /\S*(-?\d+(\.\d+)?)/}}} required/>
-                        <AvFeedback>Invalid Longitude value.</AvFeedback>
-                    </AvGroup>
+            {
+                !this.props.pending ?
+                    <Col sm="12" md={{size: 8, offset: 2}}>
+                        <AvForm onValidSubmit={this.onSubmit}
+                                ref={form => this.form = form}
+                                model={model}>
+                            <AvGroup>
+                                <Label for="country_name">Country</Label>
+                                <AvInput name="country_name" type='text' id="countryName" maxLength="45" required/>
+                                <AvFeedback>Must be 45 characters or less!</AvFeedback>
+                            </AvGroup>
+                            <AvGroup>
+                                <Label for="city">City</Label>
+                                <AvInput name="city" type='text' id="city" maxLength="85" onChange={this.onChange}
+                                         required/>
+                                <AvFeedback>Must be 45 characters or less !</AvFeedback>
+                            </AvGroup>
+                            <AvGroup>
+                                <Label for="ip">IP</Label>
+                                <AvInput name="ip" type='text' id="ip"
+                                         validate={{pattern: {value: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/}}}
+                                         required/>
+                                <AvFeedback>Invalid IP address.</AvFeedback>
+                            </AvGroup>
+                            <AvGroup>
+                                <Label for="coordinate">Try to get coordinates from Google Maps</Label>
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend"><Button
+                                        onClick={() => this.onGet(this.state.city)}>Get</Button></InputGroupAddon>
+                                    <Input name="coordinates" value={this.state.city}/>
+                                </InputGroup>
+                            </AvGroup>
+                            <AvGroup>
+                                <Label for="latitude">Latitude</Label>
+                                <AvField name="latitude" type='number' id="latitude"
+                                         validate={{pattern: {value: /\S*(-?\d+(\.\d+)?)/}}} required/>
+                                <AvFeedback>Invalid Latitude value.</AvFeedback>
+                            </AvGroup>
+                            <AvGroup>
+                                <Label for="longitude">Longitude</Label>
+                                <AvField name="longitude" type='number' id="longitude"
+                                         validate={{pattern: {value: /\S*(-?\d+(\.\d+)?)/}}} required/>
+                                <AvFeedback>Invalid Longitude value.</AvFeedback>
+                            </AvGroup>
 
-                    <FormGroup>
-                        <Button id='popover1' color="primary">Save</Button>{'  '}
-                        <Button color="secondary" onClick={this.resetForm}>Clear Values</Button>
-                        <Button color="info" className="float-right" onClick={this.props.close}>Close</Button>
-                    </FormGroup>
-                </AvForm>
-            </Col>
+                            <FormGroup>
+                                <Button id='popover1' color="primary">Save</Button>{'  '}
+                                <Button color="secondary" onClick={this.resetForm}>Clear Values</Button>
+                                <Button color="info" className="float-right" onClick={this.props.close}>Close</Button>
+                            </FormGroup>
+                        </AvForm>
+                    </Col>
+                    :
+                    <Spinner/>
             }
         </Container>;
     }
@@ -180,21 +183,24 @@ class EntriesHandler extends Component {
 EntriesHandler.propTypes = {
     close: PropTypes.func,
     handleSubmit: PropTypes.func,
-    tbAction: PropTypes.string
+    tbAction: PropTypes.string,
+    pending: PropTypes.bool
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         setEditModel: (data) => dispatch(actions.onSetCurrentEditModel(data)),
         cleanEditModel: () => dispatch(actions.onCleanCurrentEditModel()),
-        onDefaultEditModel: () => dispatch(actions.onDefaultCurrentEditModel())
+        onDefaultEditModel: () => dispatch(actions.onDefaultCurrentEditModel()),
+        onPending: (val) => dispatch(actions.onPending(val))
     }
 };
 
 const mapStateToProps = state => {
     return {
         model: state.app.editModel,
-        tbAction: state.app.toolbarAction
+        tbAction: state.app.toolbarAction,
+        pending: state.app.pending
     }
 };
 

@@ -4,7 +4,7 @@ import {Route, Switch, withRouter} from 'react-router-dom';
 import * as actions from "./store/actions";
 import EntriesHandler from './components/EntriesHandler';
 import * as constStr from "./utils/constants";
-import * as css from './App.scss'
+import * as css from './App'
 import Location from "./components/Location";
 import List from "./containers/List";
 import toolbarButtonsVisibility from "./utils/toolBarUtilities";

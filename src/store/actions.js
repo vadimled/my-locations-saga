@@ -1,5 +1,16 @@
 import * as actionType from "../utils/constants";
 
+export function onPending(val) {
+    return dispatch => dispatch(
+        {
+            type: actionType.SET_PENDING,
+            payload: val
+        }
+    )
+
+}
+
+
 export const fetchDB = () => {
     return {
         type: actionType.DB_FETCH

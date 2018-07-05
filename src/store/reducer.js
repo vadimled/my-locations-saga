@@ -6,14 +6,28 @@ const initialState = {
     toolbarAction: null,
     location: {},
     editModel: null,
-    filter: 0
+    filter: 0,
+    pending: false
 };
 
 const reducer = (state = initialState, {type, payload}) => {
+    if (type === typeAction.SET_PENDING) {
+        return {
+            ...state,
+            pending: payload
+        }
+    }
     if (type === typeAction.DB_FETCH_SUCCESS) {
         return {
             ...state,
-            db: {...state.db, ...payload}
+            db: {...state.db, ...payload},
+            pending: false
+        }
+    }
+    if (type === typeAction.DB_FETCH) {
+        return {
+            ...state,
+            pending: true
         }
     }
     if (type === typeAction.EDIT_TOOLBAR_STATE) {
@@ -23,22 +37,24 @@ const reducer = (state = initialState, {type, payload}) => {
             ...state, isActive: active, toolbarAction: name
         }
     }
-    if (type === typeAction.SET_CURRENT_LOCATION) {
+     if (type === typeAction.SET_DEFAULT_EDIT_MODEL) {
         return {
             ...state,
-            location: {...state.location, ...payload}
-        }
-    }
-    if (type === typeAction.SET_DEFAULT_EDIT_MODEL) {
-        return {
-            ...state,
-            editModel: initialState.editModel
+            editModel: initialState.editModel,
+            pending: false
         }
     }
     if (type === typeAction.GM_COORDINATES_FETCH_SUCCESS) {
         return {
             ...state,
-            editModel: {...state.editModel, ...payload}
+            editModel: {...state.editModel, ...payload},
+            pending: false
+        }
+    }
+    if (type === typeAction.GM_COORDINATES_FETCH) {
+        return {
+            ...state,
+            pending: true
         }
     }
 
@@ -49,7 +65,8 @@ const reducer = (state = initialState, {type, payload}) => {
         }, {});
         return {
             ...state,
-            editModel: {...state.editModel, ...emptyModel}
+            editModel: {...state.editModel, ...emptyModel},
+            pending: false
         }
     }
 
@@ -64,21 +81,24 @@ const reducer = (state = initialState, {type, payload}) => {
         });
         return {
             ...state,
-            ...newState
+            ...newState,
+            pending: false
         }
     }
-     if (type === typeAction.DB_ADD_NEW_ENTRY_SUCCESS) {
+    if (type === typeAction.DB_ADD_NEW_ENTRY_SUCCESS) {
         const newItem = {...state.db, [payload.id]: payload.data};
 
         return {
             ...state,
-            db: newItem
+            db: newItem,
+            pending: false
         }
     }
     if (type === typeAction.DB_EDIT_ITEM_SUCCESS) {
         return {
             ...state,
-            db: {...state.db, [payload.id]: payload.edited}
+            db: {...state.db, [payload.id]: payload.edited},
+            pending: false
         }
     }
     if (type === typeAction.SET_FILTER_STATE) {
