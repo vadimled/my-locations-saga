@@ -15,7 +15,6 @@ class Location extends React.Component {
     };
 
     componentWillMount() {
-        console.log(this.props.tBar);
         let _id;
         const query = new URLSearchParams(this.props.location.search);
         for (let param of query.entries()) {

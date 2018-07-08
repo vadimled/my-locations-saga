@@ -25,7 +25,7 @@ sagaMiddleware.run(watchSaga);
 
 ReactDOM.render(
     <Provider store={store}>
-        <BrowserRouter {/*basename="/my-locations-saga/"*/}>
+        <BrowserRouter>
             <App />
         </BrowserRouter>
     </Provider>, document.getElementById('root'));
